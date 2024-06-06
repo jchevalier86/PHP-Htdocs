@@ -1,0 +1,223 @@
+<?php
+
+class Product {
+    protected string $category;
+    protected string $id;
+    protected float $price;
+    protected string $name;
+    protected int $quantity;
+
+    public function __construct(string $category, string $id, float $price, string $name, int $quantity) {
+        $this->category = $category;
+        $this->id = $id;
+        $this->price = $price;
+        $this->name = $name;
+        $this->quantity = $quantity;
+    }
+
+    public function getCategory(): string {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): void {
+        $this->category = $category;
+    }
+
+    public function getId(): string {
+        return $this->id;
+    }
+
+    public function setId(string $id): void {
+        $this->id = $id;
+    }
+
+    public function getPrice(): float {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): void {
+        $this->price = $price;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function setName(string $name): void {
+        $this->name = $name;
+    }
+
+    public function getQuantity(): int {
+        return $this->quantity;
+    }
+
+    public function setQuantity(int $quantity): void {
+        $this->quantity = $quantity;
+    }
+
+    public function printAttributes(): void {
+        echo "Category: {$this->category}, ID: {$this->id}, Price: {$this->price}, Name: {$this->name}, Quantity: {$this->quantity}\n";
+    }
+}
+
+class GardeningProduct extends Product {
+    private string $season;
+
+    public function __construct(string $category, string $id, float $price, string $name, int $quantity, string $season) {
+        parent::__construct($category, $id, $price, $name, $quantity);
+        $this->season = $season;
+    }
+
+    public function getSeason(): string {
+        return $this->season;
+    }
+
+    public function setSeason(string $season): void {
+        $this->season = $season;
+    }
+
+    public function printAttributes(): void {
+        parent::printAttributes();
+        echo "Season: {$this->season}\n";
+    }
+}
+
+class DIYProduct extends Product {
+    private string $section;
+    private bool $electric;
+
+    public function __construct(string $category, string $id, float $price, string $name, int $quantity, string $section, bool $electric) {
+        parent::__construct($category, $id, $price, $name, $quantity);
+        $this->section = $section;
+        $this->electric = $electric;
+    }
+
+    public function getSection(): string {
+        return $this->section;
+    }
+
+    public function setSection(string $section): void {
+        $this->section = $section;
+    }
+
+    public function isElectric(): bool {
+        return $this->electric;
+    }
+
+    public function setElectric(bool $electric): void {
+        $this->electric = $electric;
+    }
+
+    public function printAttributes(): void {
+        parent::printAttributes();
+        echo "Section: {$this->section}, Electric: " . ($this->electric ? 'Yes' : 'No') . "\n";
+    }
+}
+
+class PetFood extends Product {
+    private string $animalConcerned;
+    private float $packageWeight;
+
+    public function __construct(string $category, string $id, float $price, string $name, int $quantity, string $animalConcerned, float $packageWeight) {
+        parent::__construct($category, $id, $price, $name, $quantity);
+        $this->animalConcerned = $animalConcerned;
+        $this->packageWeight = $packageWeight;
+    }
+
+    public function getAnimalConcerned(): string {
+        return $this->animalConcerned;
+    }
+
+    public function setAnimalConcerned(string $animalConcerned): void {
+        $this->animalConcerned = $animalConcerned;
+    }
+
+    public function getPackageWeight(): float {
+        return $this->packageWeight;
+    }
+
+    public function setPackageWeight(float $packageWeight): void {
+        $this->packageWeight = $packageWeight;
+    }
+
+    public function printAttributes(): void {
+        parent::printAttributes();
+        echo "Animal Concerned: {$this->animalConcerned}, Package Weight: {$this->packageWeight} kg\n";
+    }
+}
+
+class Catalogue {
+    protected array $products = [];
+
+    public function loadCatalogue(string $file): void {
+        $lines = file($file);
+        foreach ($lines as $line) {
+            $data = explode(";", $line);
+            $category = trim($data[0]);
+            $id = trim($data[1]);
+            $price = trim($data[2]);
+            $name = trim($data[3]);
+            $quantity = trim($data[4]);
+
+            if ($category === "Jardinage") {
+                $season = trim($data[5]);
+                $product = new GardeningProduct($category, $id, $price, $name, $quantity, $season);
+            } elseif ($category === "Bricolage") {
+                $section = trim($data[5]);
+                $electric = trim($data[6]);
+                $product = new DIYProduct($category, $id, $price, $name, $quantity, $section, $electric);
+            } elseif ($category === "NourritureAnimaux") {
+                $animalConcerned = trim($data[5]);
+                $packageWeight = trim($data[6]);
+                $product = new PetFood($category, $id, $price, $name, $quantity, $animalConcerned, $packageWeight);
+            } else {
+                // Handle unknown category
+                continue;
+            }
+            $this->products[] = $product;
+        }
+    }
+
+    public function getProducts(): array {
+        return $this->products;
+    }
+
+    public function printProductAttributes(): void {
+        foreach ($this->products as $product) {
+            $product->printAttributes();
+            echo "\n";
+        }
+    }
+
+    public function applyFlashPromotion(float $discountPercentage): void {
+        foreach ($this->products as $product) {
+            $discount = $product->getPrice() * $discountPercentage / 100;
+            $product->setPrice($product->getPrice() - $discount);
+        }
+    }
+
+    public function calculateOverallStockValue(): float {
+        $totalValue = 0;
+        foreach ($this->products as $product) {
+            $totalValue += $product->getPrice() * $product->getQuantity();
+        }
+        return $totalValue;
+    }
+}
+
+// Usage example:
+$catalogue = new Catalogue();
+$catalogue->loadCatalogue('catalogueEx2Ex3.csv');
+
+// Apply flash promotion (-10%)
+$catalogue->applyFlashPromotion(10);
+
+// Print updated product attributes
+echo "Products after applying flash promotion:\n";
+$catalogue->printProductAttributes();
+
+// Calculate overall stock value
+$totalValue = $catalogue->calculateOverallStockValue();
+echo "\nOverall stock value: $totalValue\n";
+
+?>

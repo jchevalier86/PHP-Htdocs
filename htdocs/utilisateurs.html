@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisateurs</title>
+    <style>
+        form {
+            display: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #000000;
+            margin: 150px;
+            padding: 14px 0 16px 0;
+        }
+
+        input {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<form action="utilisateurs.php" post="GET">
+    <label for="prenom">Prenom :*</label>
+    <input type="text" id="prenom" name="prenom" required><br>
+    <label for="nom">Nom :*</label>
+    <input type="text" id="nom" name="nom" required><br>
+    <label for="email">Email :*</label>
+    <input type="email" id="email" name="email" required><br>
+    <label for="date">Année de naissance :*</label>
+    <input type="number" id="date" name="date" required><br>
+    <label for="ville">Ville :*</label>
+    <input type="text" id="ville" name="ville" required><br>
+    <input type="submit" value="Créer un utilisateur">
+</body>
+
+</html>

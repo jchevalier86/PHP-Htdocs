@@ -1,0 +1,8 @@
+<?php
+    require_once("test.php");
+    $req = "INSERT INTO utilisateurs (id, prenom, nom, email) VALUES (null, 'Thomas', 'Girardeau', 'thomas.girardeau@ifpa86.fr');";
+    $mysqli -> query($req);
+    if ($mysqli -> affected_rows > 0) {
+        echo "Utilisateur ajouté";
+    }
+?>
