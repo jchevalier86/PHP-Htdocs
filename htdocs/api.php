@@ -2,7 +2,7 @@
     // Définir l'en-tête du contenu comme JSON avec encodage UTF-8
     header('Content-Type: application/json; charset=utf-8');
 
-    // Inclure le fichier "api-func.php" qui contient probablement des fonctions nécessaires.
+    // Inclure le fichier "api-func.php" qui contient des fonctions nécessaires.
     require_once("api-func.php");
 
     // Vérifie si un token est présent dans la requête GET.
